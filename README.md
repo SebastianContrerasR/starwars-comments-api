@@ -1,50 +1,56 @@
-<!--
-title: 'Serverless Framework Node Express API service backed by DynamoDB on AWS'
-description: 'This template demonstrates how to develop and deploy a simple Node Express API service backed by DynamoDB running on AWS Lambda using the Serverless Framework.'
-layout: Doc
-framework: v4
-platform: AWS
-language: nodeJS
-priority: 1
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, Inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# Star wars comments api
+Api que sirve para guardar comentarios u opiniones sobre los recursos de api, donde puedes comentar sobre tu personaje, pelicula, nave, vehiculo, planeta o especie de star wars favorito.
 
-# Serverless Framework Node Express API on AWS
+## Uso
 
-This template demonstrates how to develop and deploy a simple Node Express API service, backed by DynamoDB table, running on AWS Lambda using the Serverless Framework.
-
-This template configures a single function, `api`, which is responsible for handling all incoming requests using the `httpApi` event. To learn more about `httpApi` event configuration options, please refer to [httpApi event docs](https://www.serverless.com/framework/docs/providers/aws/events/http-api/). As the event is configured in a way to accept all incoming requests, the Express.js framework is responsible for routing and handling requests internally. This implementation uses the `serverless-http` package to transform the incoming event request payloads to payloads compatible with Express.js. To learn more about `serverless-http`, please refer to the [serverless-http README](https://github.com/dougmoscrop/serverless-http).
-
-Additionally, it also handles provisioning of a DynamoDB database that is used for storing data about users. The Express.js application exposes two endpoints, `POST /users` and `GET /user/:userId`, which create and retrieve a user record.
-
-## Usage
-
-### Deployment
-
-Install dependencies with:
+Instalar dependencias:
 
 ```
 npm install
 ```
 
-and then deploy with:
+y luego desplegar con:
 
 ```
 serverless deploy
 ```
 
-### Local development
-
-The easiest way to develop and test your function is to use the `dev` command:
+### Desarrollo local
 
 ```
 serverless dev
 ```
 
-This will start a local emulator of AWS Lambda and tunnel your requests to and from AWS Lambda, allowing you to interact with your function as if it were running in the cloud.
+## Documentacion de uso
+El repositorio incluye la coleccion de postman, puedes importarlo para revisar los apis facilmente.
+En postman, opcion 'importar' o 'import'
+![image](https://github.com/user-attachments/assets/296aaa34-f875-45a5-bf77-6e01f2df6fcf)
 
-Now you can invoke the function as before, but this time the function will be executed locally. Now you can develop your function locally, invoke it, and see the results immediately without having to re-deploy.
+Apareceran los 3 endpoints que expone el proyecto
+![image](https://github.com/user-attachments/assets/b84dd328-0691-484c-90ae-5f31f161763e)
 
-When you are done developing, don't forget to run `serverless deploy` to deploy the function to the cloud.
+En variables de coleccion, actualizar por la url dada por el `serverless deploy` o `serverless dev`.
+![image](https://github.com/user-attachments/assets/11f5c50a-5498-46ff-954d-48c96cfaffc9)
+
+Una vez realizado estas configuraciones, se puede probar los endpoints.
+1. GET: Translate swapi: Endpoint que integra todos los recursos que se tiene en el api swapi y traduce sus atributos de ingles a español.
+![image](https://github.com/user-attachments/assets/8e28381d-0df9-4d7d-b3ae-f61def201601)
+En la url, debe poner de la misma manera que en el api swapi, para cualquier recurso ya sea: personaje, pelicula, nave, vehiculo, planeta o especie. Asimismo, debe incluir el id como en api swapi.
+
+2. POST: Create comment: Endpoint que crea un comentario y guarda el comentario en DynamoDB sobre algun recurso del api swapi. Por ejemplo, se esta creando un comentario sobre el personaje con id 1 en swapi de la siguiente manera.
+![image](https://github.com/user-attachments/assets/3cad07a2-1f89-4131-a0eb-f0e932fa1612)
+En caso todo vaya bien, devolvera un estado 201 creado con un mensaje.
+En caso el recurso o el recursoId no pertenezca a ningun recurso valido en api swapi, saltara el siguiente error. Para ejemplificar, estamos escribiendo mal el recuso.
+![image](https://github.com/user-attachments/assets/bc0caa8f-30b1-49ac-9547-87a859c221d2)
+
+3. GET: Comments of resource swapi: Endpoint que obtiene los comentarios registrados a los recursos de swapi. En este ejemplo, vamos a recuperar los comentarios para el recurso `people/1` de swapi.
+![image](https://github.com/user-attachments/assets/7658b8d9-b9a2-4cbf-9992-e218bfa0b46e)
+Asimismo, se implemento la paginacion, con query params como `limit` y `lastEvaluatedKey` que nos da DynamoDB.
+Cuando enviamos un limite, el resultado es el siguiente. Un objeto con los comentarios y se agrega el `lastEvaluatedKey` para enviarlo como query param para obtener la "siguiente pagina".
+![image](https://github.com/user-attachments/assets/cae2ee08-46a8-4630-bb07-75343258fc12)
+Como se ve, solo nos devolvio 2 comentarios.
+
+Ahora, enviamos como query param `lastEvaluatedKey`.
+ ![image](https://github.com/user-attachments/assets/7b588c21-1dce-40a7-9487-1126b2060adc)
+Como se ve, se obtiene los otros dos comentarios del recurso.
+

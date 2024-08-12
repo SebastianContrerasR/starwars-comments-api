@@ -1,4 +1,4 @@
-export enum CommentType {
+export enum ResourceType {
     PEOPLE = 'people',
     FILMS = 'films',
     STARSHIPS = 'starships',
@@ -9,9 +9,10 @@ export enum CommentType {
 
 export class Comment {
     id: string;
-    recurso: CommentType;
+    recurso: ResourceType;
     recursoId: string;
     comentario: string;
     calificacion: number;
     fechaCreacion: string;
+
 }

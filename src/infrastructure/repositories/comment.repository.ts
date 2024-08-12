@@ -1,6 +1,6 @@
 import { DynamoDB } from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { Comment } from '../../domain/comment';
+import { Comment, ResourceType } from '../../domain/comment';
 
 const dynamoDb = new DynamoDB.DocumentClient();
 
@@ -15,16 +15,22 @@ export class CommentRepository {
         await dynamoDb.put(params).promise();
     }
 
-    async getByResourceId(recursoId: string): Promise<Comment[]> {
+    async search(resourceId: string, resource: ResourceType, limit?: number, lastEvaluatedKey?: DocumentClient.Key): Promise<{ comments: Comment[], lastEvaluatedKey?: DocumentClient.Key }> {
         const params: DocumentClient.QueryInput = {
             TableName: this.tableName,
-            IndexName: 'recursoId-index',
-            KeyConditionExpression: 'recursoId = :recursoId',
+            IndexName: 'recursoId-recurso-index',
+            KeyConditionExpression: 'recursoId = :resourceId AND recurso = :resourceType',
             ExpressionAttributeValues: {
-                ':recursoId': recursoId,
+                ':resourceId': resourceId,
+                ':resourceType': resource,
             },
+            Limit: limit || 10,
+            ExclusiveStartKey: lastEvaluatedKey,
         };
         const result = await dynamoDb.query(params).promise();
-        return result.Items as Comment[];
+        return {
+            comments: result.Items as Comment[],
+            lastEvaluatedKey: result.LastEvaluatedKey,
+        };
     }
 }

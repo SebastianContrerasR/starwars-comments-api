@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "9de38fd6-243a-429d-bac4-535795ce0a63",
+		"name": "starwars comment api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28280322"
+	},
+	"item": [
+		{
+			"name": "Create comment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"recurso\": \"people\",\r\n  \"recursoId\": \"1\",\r\n  \"comentario\": \"Este es otro comentario\",\r\n  \"calificacion\": 4\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/comments"
+			},
+			"response": []
+		},
+		{
+			"name": "Comments of resource swapi",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"recurso\": \"starships\",\r\n  \"recursoId\": \"12\",\r\n  \"comentario\": \"Este es otro comentario\",\r\n  \"calificacion\": 4\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/people/1/comments?limit=2",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"people",
+						"1",
+						"comments"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "2"
+						},
+						{
+							"key": "lastEvaluatedKey",
+							"value": "{ \"id\": \"86a527bc-5c99-4fb1-8cd9-257b887be574\", \"recursoId\": \"1\", \"recurso\": \"people\" }",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "translate swapi",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"recurso\": \"starships\",\r\n  \"recursoId\": \"12\",\r\n  \"comentario\": \"Este es un comentario\",\r\n  \"calificacion\": 5\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{url}}/people/1"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://5vd3hd9ili.execute-api.us-east-1.amazonaws.com",
+			"type": "string"
+		}
+	]
+}

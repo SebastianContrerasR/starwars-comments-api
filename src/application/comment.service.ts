@@ -1,11 +1,11 @@
 import { Comment, ResourceType } from "../domain/comment";
-import { StarWarsApi } from "../infrastructure/apis/star-wars.api";
-import { CommentRepository } from "../infrastructure/repositories/comment.repository";
+import { CommentRepository } from "../domain/comment.repository";
+import { StarWarsApiRepository } from "../domain/star-wars.api.repository";
 
 export class CommentService {
     constructor(
         private readonly commentRepository: CommentRepository,
-        private readonly starWarsApi: StarWarsApi,
+        private readonly starWarsApiRepository: StarWarsApiRepository,
     ) { }
 
     async search(resourceId: string, resource: ResourceType, limit?: number, lastEvaluatedKey?: any): Promise<{ comments: Comment[], lastEvaluatedKey?: any }> {
@@ -19,7 +19,7 @@ export class CommentService {
     }
 
     async save(comment: Comment): Promise<void> {
-        const resourceExists = await this.starWarsApi.getResourceById(comment.recurso.toLowerCase(), comment.recursoId);
+        const resourceExists = await this.starWarsApiRepository.getResourceById(comment.recurso, comment.recursoId);
 
         if (!resourceExists) {
             throw new Error(`Recurso ${comment.recurso} con id ${comment.recursoId} no encontrado en la API de Star Wars`);

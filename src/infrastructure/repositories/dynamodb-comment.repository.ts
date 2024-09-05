@@ -1,10 +1,11 @@
 import { DynamoDB } from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { Comment, ResourceType } from '../../domain/comment';
+import { CommentRepository } from '../../domain/comment.repository';
 
 const dynamoDb = new DynamoDB.DocumentClient();
 
-export class CommentRepository {
+export class DynamoDBCommentRepository implements CommentRepository {
     private readonly tableName = process.env.COMMENT_TABLE_NAME || 'CommentsTable';
 
     async save(comment: Comment): Promise<void> {
@@ -18,11 +19,11 @@ export class CommentRepository {
     async search(resourceId: string, resource: ResourceType, limit?: number, lastEvaluatedKey?: DocumentClient.Key): Promise<{ comments: Comment[], lastEvaluatedKey?: DocumentClient.Key }> {
         const params: DocumentClient.QueryInput = {
             TableName: this.tableName,
-            IndexName: 'recursoId-recurso-index',
-            KeyConditionExpression: 'recursoId = :resourceId AND recurso = :resourceType',
+            IndexName: 'recurso-recursoId-index',
+            KeyConditionExpression: 'recurso = :resourceType AND recursoId = :resourceId',
             ExpressionAttributeValues: {
-                ':resourceId': resourceId,
                 ':resourceType': resource,
+                ':resourceId': resourceId,
             },
             Limit: limit || 10,
             ExclusiveStartKey: lastEvaluatedKey,

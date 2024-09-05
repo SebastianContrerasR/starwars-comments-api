@@ -3,14 +3,14 @@ import serverless from "serverless-http";
 import { v4 as uuidv4 } from "uuid";
 import { CommentService } from "./application/comment.service";
 import { StarWarsApi } from "./infrastructure/apis/star-wars.api";
-import { CommentRepository } from "./infrastructure/repositories/comment.repository";
 import { ResourceType } from "./domain/comment";
+import { DynamoDBCommentRepository } from "./infrastructure/repositories/dynamodb-comment.repository";
 
 const app = express();
 app.use(express.json());
 
 const starWarsApi = new StarWarsApi();
-const commentRepository = new CommentRepository();
+const commentRepository = new DynamoDBCommentRepository();
 const commentService = new CommentService(commentRepository, starWarsApi);
 
 /**

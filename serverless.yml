@@ -1,8 +1,5 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
 org: sebastiancontreras
-# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
 app: starwars-comments-api
-# "service" is the name of this project. This will also be added to your AWS resource names.
 service: starwars-comments-api
 
 stages:
@@ -26,7 +23,7 @@ provider:
             - dynamodb:DeleteItem
           Resource:
             - Fn::GetAtt: [CommentsTable, Arn]
-            - Fn::Sub: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:provider.environment.COMMENT_TABLE_NAME}/index/recursoId-recurso-index
+            - Fn::Sub: arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:provider.environment.COMMENT_TABLE_NAME}/index/recurso-recursoId-index
   environment:
     COMMENT_TABLE_NAME: ${param:tableName}
 
@@ -53,11 +50,11 @@ resources:
           - AttributeName: id
             KeyType: HASH
         GlobalSecondaryIndexes:
-          - IndexName: recursoId-recurso-index
+          - IndexName: recurso-recursoId-index
             KeySchema:
-              - AttributeName: recursoId
-                KeyType: HASH
               - AttributeName: recurso
+                KeyType: HASH
+              - AttributeName: recursoId
                 KeyType: RANGE
             Projection:
               ProjectionType: ALL

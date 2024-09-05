@@ -1,5 +1,5 @@
-import { ResourceType } from 'aws-sdk/clients/batch';
-import fetch from 'node-fetch';
+import { StarWarsApiRepository } from '../../domain/star-wars.api.repository';
+import { ResourceType } from '../../domain/comment';
 import { StarWarsApiTranslationService } from '../services/star-wars-api-translation/star-wars-api-translation.service';
 import { PeopleTranslation } from '../services/star-wars-api-translation/interfaces/people-translation.interface';
 import { FilmsTranslation } from '../services/star-wars-api-translation/interfaces/films-translation.interface';
@@ -8,7 +8,7 @@ import { VehiclesTranslation } from '../services/star-wars-api-translation/inter
 import { SpeciesTranslation } from '../services/star-wars-api-translation/interfaces/species-translation.interface';
 import { PlanetsTranslation } from '../services/star-wars-api-translation/interfaces/planets-translation.interface';
 
-export class StarWarsApi {
+export class StarWarsApi implements StarWarsApiRepository {
     private readonly baseUrl: string = 'https://swapi.py4e.com/api';
 
     async getResourceById(resourceType: ResourceType, resourceId: string): Promise<PeopleTranslation | FilmsTranslation | StarshipsTranslation | VehiclesTranslation | SpeciesTranslation | PlanetsTranslation> {
